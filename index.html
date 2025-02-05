@@ -3,94 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Medical Chatbot</title>
+    <title>Medical Chatbot</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            background-color: #f4f4f4;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
         }
-        #chatbox {
-            width: 400px;
+        .chat-container {
             background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-        #messages {
-            flex: 1;
             padding: 20px;
-            overflow-y: auto;
-            border-bottom: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
         }
-        #user-input {
-            display: flex;
-            border-top: 1px solid #ddd;
-        }
-        #user-input input {
-            flex: 1;
+        input, button {
             padding: 10px;
-            border: none;
-            outline: none;
+            margin: 10px 0;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
-        #user-input button {
-            padding: 10px 20px;
-            background: #007bff;
+        button {
+            background-color: #007bff;
             color: white;
-            border: none;
             cursor: pointer;
         }
-        #user-input button:hover {
-            background: #0056b3;
-        }
-        .message {
-            margin-bottom: 15px;
-        }
-        .message.user {
-            text-align: right;
-        }
-        .message.bot {
-            text-align: left;
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <div id="chatbox">
-        <div id="messages"></div>
-        <div id="user-input">
-            <input type="text" id="input" placeholder="Ask me a medical question...">
-            <button onclick="sendMessage()">Send</button>
-        </div>
+    <div class="chat-container">
+        <h1>Medical Chatbot</h1>
+        <input type="text" id="question" placeholder="Ask a medical question...">
+        <button onclick="sendQuestion()">Ask</button>
+        <p id="answer"></p>
     </div>
 
     <script>
-        async function sendMessage() {
-            const input = document.getElementById('input');
-            const userMessage = input.value.trim();
-            if (!userMessage) return;
-
-            // Display user message
-            const messages = document.getElementById('messages');
-            messages.innerHTML += `<div class="message user">You: ${userMessage}</div>`;
-            input.value = '';
-
-            // Fetch bot response
-            const response = await fetch('/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: userMessage })
+        async function sendQuestion() {
+            const question = document.getElementById("question").value;
+            const response = await fetch("https://your-backend-url/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ question: question })
             });
             const data = await response.json();
-
-            // Display bot response
-            messages.innerHTML += `<div class="message bot">AI Doctor: ${data.reply}</div>`;
-            messages.scrollTop = messages.scrollHeight;
+            document.getElementById("answer").innerText = data.answer;
         }
     </script>
 </body>
